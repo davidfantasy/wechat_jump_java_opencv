@@ -182,9 +182,10 @@ public class JumpCV {
         //查找，以提高准确率
         //int offset = Math.round((img.rows() / 2160f) * 70);
         //TODO:对于唱片，便利店等表面花纹比较复杂的方块，找到的下边缘会被花纹干扰，虽然提高偏移量可以解决这个问题，但是又会导致小的目标块识别错误
-        int minDistance = Math.round((img.rows() / 2160f) * 90);
+        int minDistance = Math.round((img.rows() / 2160f) * 80);
         for (int i = topY; i < rows; i++) {
             //指定以顶点X为中心的一个范围内搜索该行不为0的点
+            int noneZeroPonits = 0;
             for (int j = topX - 5; j < topX + 5; j++) {
                 if (j < 0) {
                     continue;
@@ -194,11 +195,11 @@ public class JumpCV {
                 }
                 int color = indexer.get(i, j, 0, 0);
                 if (color != 0) {
-                    buttomY = i;
-                    break;
+                    noneZeroPonits++;
                 }
             }
-            if (buttomY != 0 && (buttomY - topY) > minDistance) {
+            if (noneZeroPonits <= 1 && noneZeroPonits > 0 && (i - topY) > minDistance) {
+                buttomY = i;
                 break;
             }
         }
